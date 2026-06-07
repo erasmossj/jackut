@@ -15,8 +15,7 @@ public class UsuarioRepository {
         try {
             String path = "data/usuario_data.xml";
             XMLEncoder encoder = new XMLEncoder(
-                    new BufferedOutputStream(new FileOutputStream(path))
-            );
+                    new BufferedOutputStream(new FileOutputStream(path)));
             encoder.writeObject(usuariosList);
             encoder.close();
         } catch (Exception e) {
@@ -24,12 +23,12 @@ public class UsuarioRepository {
         }
     }
 
-    public static List<Usuario> load(){
+    @SuppressWarnings("unchecked")
+    public static List<Usuario> load() {
         try {
             String path = "data/usuario_data.xml";
             XMLDecoder decoder = new XMLDecoder(
-                    new BufferedInputStream(new FileInputStream(path))
-            );
+                    new BufferedInputStream(new FileInputStream(path)));
             List<Usuario> usuariosList = (List<Usuario>) decoder.readObject();
             decoder.close();
             return usuariosList;
@@ -38,7 +37,7 @@ public class UsuarioRepository {
         }
     }
 
-    public static void clear(){
+    public static void clear() {
         save(new ArrayList<>());
     }
 
@@ -63,4 +62,3 @@ public class UsuarioRepository {
         return false;
     }
 }
-
