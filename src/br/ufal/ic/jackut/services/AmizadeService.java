@@ -29,9 +29,7 @@ public class AmizadeService {
 
         String meuLogin = usuarioLogado.getLogin();
 
-        if (!UsuarioRepository.existsByLogin(amigoLogin)) {
-            throw new UsuarioNaoCadastradoException();
-        }
+        Validador.validarUsuarioExistente(amigoLogin);
 
         if (meuLogin.equals(amigoLogin)) {
             throw new AutoAmizadeException();
