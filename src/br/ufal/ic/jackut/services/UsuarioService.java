@@ -62,13 +62,11 @@ public class UsuarioService {
 	public String abrirSessao(String login, String senha, SessionService sessionService)
 			throws LoginOuSenhaInvalidoException {
 		Usuario usuario = usuariosList.stream()
-				.filter(u -> login != null && u.getLogin().equals(login))
+				.filter(u -> Validador.loginValido(login) && u.getLogin().equals(login))
 				.findFirst()
 				.orElse(null);
 
-		if (usuario == null || senha == null || !senha.equals(usuario.getSenha())) {
-			throw new LoginOuSenhaInvalidoException();
-		}
+		Validador.validarCredenciais(senha, usuario);
 
 		return sessionService.criarSessao(usuario);
 	}
@@ -76,9 +74,8 @@ public class UsuarioService {
 	public void editarPerfil(String id, String atributo, String valor, SessionService sessionService)
 			throws SessaoInvalidaException {
 		Usuario usuario = sessionService.obterUsuarioDaSessao(id);
-		if (usuario == null) {
-			throw new SessaoInvalidaException();
-		}
+		Validador.validarSessao(usuario);
+		
 		usuario.setAtributo(atributo, valor);
 		UsuarioRepository.save(usuariosList);
 	}
