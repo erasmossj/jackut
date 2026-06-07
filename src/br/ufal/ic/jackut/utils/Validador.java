@@ -2,6 +2,9 @@ package br.ufal.ic.jackut.utils;
 
 import br.ufal.ic.jackut.exceptions.LoginInvalidoException;
 import br.ufal.ic.jackut.exceptions.SenhaInvalidaException;
+import br.ufal.ic.jackut.exceptions.SessaoInvalidaException;
+import br.ufal.ic.jackut.exceptions.LoginOuSenhaInvalidoException;
+import br.ufal.ic.jackut.models.Usuario;
 
 public class Validador {
     private Validador() {}
@@ -20,6 +23,18 @@ public class Validador {
 
     public static void validarSenha(final String senha) throws SenhaInvalidaException {
         if (!senhaValida(senha)) throw new SenhaInvalidaException();
+    }
+
+    public static void validarSessao(Usuario usuarioLogado) throws SessaoInvalidaException {
+        if (usuarioLogado == null) {
+            throw new SessaoInvalidaException();
+        }
+    }
+
+    public static void validarCredenciais(String senha, Usuario usuario) throws LoginOuSenhaInvalidoException {
+        if (usuario == null || !senhaValida(senha) || !senha.equals(usuario.getSenha())) {
+            throw new LoginOuSenhaInvalidoException();
+        }
     }
 }
 
