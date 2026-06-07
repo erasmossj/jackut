@@ -1,0 +1,73 @@
+package br.ufal.ic.jackut.services;
+
+import br.ufal.ic.jackut.exceptions.*;
+import br.ufal.ic.jackut.repository.UsuarioRepository;
+import br.ufal.ic.jackut.models.Usuario;
+import br.ufal.ic.jackut.utils.Validador;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class UsuarioService {
+    private List<Usuario> usuariosList;
+
+    public UsuarioService(List<Usuario> usuariosList) {
+        this.usuariosList = usuariosList;
+    }
+
+    public List<Usuario> getUsuariosList() {
+        return usuariosList;
+    }
+
+    public void addUsuario(Usuario usuario) {
+        this.usuariosList.add(usuario);
+        UsuarioRepository.save(usuariosList);
+    }
+
+    public String getAtributoUsuario(String login, String atributo) throws UsuarioNaoCadastradoException {
+        Usuario usuario = usuariosList.stream()
+                .filter(u -> u.getLogin().equals(login))
+                .findFirst()
+                .orElseThrow(UsuarioNaoCadastradoException::new);
+
+        switch (atributo) {
+            case "nome":
+                return usuario.getNome();
+            case "login":
+                return usuario.getLogin();
+            case "senha":
+                return usuario.getSenha();
+            default:
+                throw new UsuarioNaoCadastradoException();
+        }
+    }
+
+    public void criarUsuario(String login, String senha, String nome) throws ContaNaExisteException, LoginInvalidoException, SenhaInvalidaException {
+        Validador.validarLogin(login);
+        Validador.validarSenha(senha);
+
+        if (usuariosList.stream().anyMatch(u -> u.getLogin().equals(login))) {
+            throw new ContaNaExisteException();
+        }
+
+        Usuario usuario = new Usuario(login, nome, senha);
+        addUsuario(usuario);
+    }
+
+    public void abrirSessao(String login, String senha) throws LoginOuSenhaInvalidoException {
+        Usuario usuario = usuariosList.stream()
+                .filter(u -> login != null && u.getLogin().equals(login))
+                .findFirst()
+                .orElse(null);
+
+        if (usuario == null || senha == null || !senha.equals(usuario.getSenha())) {
+            throw new LoginOuSenhaInvalidoException();
+        }
+    }
+
+    public void clear() {
+        this.usuariosList = new ArrayList<>();
+    }
+}
+
+

@@ -34,4 +34,5 @@ bin/
 backlog.txt
 
 ### Arquivos de Persistência ###
-!data/.gitkeep
+/data/*
+!/data/.gitkeep
