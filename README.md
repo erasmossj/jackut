@@ -2,9 +2,9 @@
 
 ## Arquitetura do Projeto Jackut
 
-### Visão Geral
+### VisÃ£o Geral
 
-O projeto Jackut é uma aplicação que simula uma rede social, com gerenciamento de usuários, amizades e envio de recados, desenvolvida em Java. A arquitetura segue padrões de boas práticas de desenvolvimento, separando responsabilidades em camadas distintas e bem definidas.
+O projeto Jackut Ã© uma aplicaÃ§Ã£o que simula uma rede social, com gerenciamento de usuÃ¡rios, amizades e envio de recados, desenvolvida em Java. A arquitetura segue padrÃµes de boas prÃ¡ticas de desenvolvimento, separando responsabilidades em camadas distintas e bem definidas.
 
 ---
 
@@ -12,134 +12,134 @@ O projeto Jackut é uma aplicação que simula uma rede social, com gerenciamento d
 
 #### `exceptions/`
 
-Separa todas as exceções em uma pasta dedicada.
+Separa todas as exceÃ§Ãµes em uma pasta dedicada.
 
 **Justificativa:**
 
-* Centralizar o tratamento de erros, para facilitar a manutenção e visualização de todos os possíveis erros do sistema.
-* Cada exceção é específica para um erro do negócio, como `LoginOuSenhaInvalidoException`, `AmizadeJaAdicionadaException`, `AutoRecadoException`.
-* Facilita a reutilização das exceções em múltiplas classes sem repetição de trechos do código.
-* Melhora a legibilidade ao centralizar toda a estratégia de tratamento de erros.
+* Centralizar o tratamento de erros, para facilitar a manutenÃ§Ã£o e visualizaÃ§Ã£o de todos os possÃ­veis erros do sistema.
+* Cada exceÃ§Ã£o Ã© especÃ­fica para um erro do negÃ³cio, como `LoginOuSenhaInvalidoException`, `AmizadeJaAdicionadaException`, `AutoRecadoException`.
+* Facilita a reutilizaÃ§Ã£o das exceÃ§Ãµes em mÃºltiplas classes sem repetiÃ§Ã£o de trechos do cÃ³digo.
+* Melhora a legibilidade ao centralizar toda a estratÃ©gia de tratamento de erros.
 
-**Exemplos de Exceções:**
+**Exemplos de ExceÃ§Ãµes:**
 
-* Validação/Login: `LoginInvalidoException`, `SenhaInvalidaException`, `LoginOuSenhaInvalidoException`
-* Negócio: `AmizadeJaAdicionadaException`, `AmizadePendenteException`, `AutoAmizadeException`, `AutoRecadoException`
+* ValidaÃ§Ã£o/Login: `LoginInvalidoException`, `SenhaInvalidaException`, `LoginOuSenhaInvalidoException`
+* NegÃ³cio: `AmizadeJaAdicionadaException`, `AmizadePendenteException`, `AutoAmizadeException`, `AutoRecadoException`
 * Sistema: `SessaoInvalidaException`, `FalhaAoSalvarException`
 
 ---
 
 #### `models/`
 
-Modelagem das classes do negócio de forma separada da lógica do serviço.
+Modelagem das classes do negÃ³cio de forma separada da lÃ³gica do serviÃ§o.
 
 **Justificativa:**
 
-* `models/` contém as classes que representam as entidades principais do sistema: `Usuario`, `Amizade`, `Recado`, `Session`.
-* Estas classes encapsulam os dados e a estrutura do negócio da rede social.
+* `models/` contÃ©m as classes que representam as entidades principais do sistema: `Usuario`, `Amizade`, `Recado`, `Session`.
+* Estas classes encapsulam os dados e a estrutura do negÃ³cio da rede social.
 
 ---
 
 #### `repository/`
 
-Abstrai a persistência de dados em uma camada de repositório.
+Abstrai a persistÃªncia de dados em uma camada de repositÃ³rio.
 
 **Justificativa:**
 
-* `repository/` é responsável pela interação com a persistência de dados para as entidades principais.
-* Facilita a escalabilidade e a manutenção do armazenamento, permitindo trocar a forma de persistência sem afetar o resto do código.
+* `repository/` Ã© responsÃ¡vel pela interaÃ§Ã£o com a persistÃªncia de dados para as entidades principais.
+* Facilita a escalabilidade e a manutenÃ§Ã£o do armazenamento, permitindo trocar a forma de persistÃªncia sem afetar o resto do cÃ³digo.
 
 ---
 
 #### `services/`
 
-Centraliza toda a lógica de operações e regras de negócio em serviços.
+Centraliza toda a lÃ³gica de operaÃ§Ãµes e regras de negÃ³cio em serviÃ§os.
 
 **Justificativa:**
 
-* `services/` contém as classes responsáveis por orquestrar as operações do sistema:
+* `services/` contÃ©m as classes responsÃ¡veis por orquestrar as operaÃ§Ãµes do sistema:
 
-  * `UsuarioService`: gerencia criação, busca e validação de usuários
-  * `AmizadeService`: gerencia solicitações, aceitação e listagem de amizades
-  * `RecadoService`: gerencia envio e leitura de recados entre os usuários
-  * `SessionService`: gerencia a sessão de usuários autenticados no sistema
+  * `UsuarioService`: gerencia criaÃ§Ã£o, busca e validaÃ§Ã£o de usuÃ¡rios
+  * `AmizadeService`: gerencia solicitaÃ§Ãµes, aceitaÃ§Ã£o e listagem de amizades
+  * `RecadoService`: gerencia envio e leitura de recados entre os usuÃ¡rios
+  * `SessionService`: gerencia a sessÃ£o de usuÃ¡rios autenticados no sistema
 
-**Por que não usar um único Manager com todos os serviços do sistema?**
+**Por que nÃ£o usar um Ãºnico Manager com todos os serviÃ§os do sistema?**
 
-* Um único Manager se tornaria uma classe gigante, difícil de manter e entender.
-* Torna o código confuso e propenso a erros.
-* Dificulta a escalabilidade, pois qualquer mudança em um único serviço poderia afetar todos os outros na classe.
+* Um Ãºnico Manager se tornaria uma classe gigante, difÃ­cil de manter e entender.
+* Torna o cÃ³digo confuso e propenso a erros.
+* Dificulta a escalabilidade, pois qualquer mudanÃ§a em um Ãºnico serviÃ§o poderia afetar todos os outros na classe.
 
 ---
 
 #### `utils/`
 
-Centraliza as funções e utilitários reutilizáveis em um único lugar.
+Centraliza as funÃ§Ãµes e utilitÃ¡rios reutilizÃ¡veis em um Ãºnico lugar.
 
 **Justificativa:**
 
-* `utils/` contém classes com métodos que seriam repetidos em múltiplos lugares, evitando trechos de código repetidos.
-* No projeto atual, a classe `Validador` é responsável por todas as validações de dados e regras genéricas.
+* `utils/` contÃ©m classes com mÃ©todos que seriam repetidos em mÃºltiplos lugares, evitando trechos de cÃ³digo repetidos.
+* No projeto atual, a classe `Validador` Ã© responsÃ¡vel por todas as validaÃ§Ãµes de dados e regras genÃ©ricas.
 * Segue o DRY (Don't Repeat Yourself).
-* Melhor manutenção e legibilidade.
+* Melhor manutenÃ§Ã£o e legibilidade.
 
 ---
 
-## Padrões de Projeto Utilizados
+## PadrÃµes de Projeto Utilizados
 
 ### **Facade Pattern**
 
 * Fornece uma interface simplificada para o cliente, como a classe principal ou os testes.
-* Reduz a complexidade ao fatorar a coordenação entre múltiplos services.
+* Reduz a complexidade ao fatorar a coordenaÃ§Ã£o entre mÃºltiplos services.
 
 ### **Repository Pattern**
 
-* Abstrai a persistência de dados.
-* Facilita a escalabilidade e manutenção do armazenamento.
+* Abstrai a persistÃªncia de dados.
+* Facilita a escalabilidade e manutenÃ§Ã£o do armazenamento.
 
 ### **Service Layer Pattern**
 
-* Centraliza a lógica de negócio.
-* Promove reutilização, escalabilidade e testabilidade.
+* Centraliza a lÃ³gica de negÃ³cio.
+* Promove reutilizaÃ§Ã£o, escalabilidade e testabilidade.
 
 ### **Guard Clauses**
 
-* Validações e verificações no início dos métodos.
-* Evita aninhamento profundo de condicionais, tornando o código mais limpo e legível.
+* ValidaÃ§Ãµes e verificaÃ§Ãµes no inÃ­cio dos mÃ©todos.
+* Evita aninhamento profundo de condicionais, tornando o cÃ³digo mais limpo e legÃ­vel.
 
 ---
 
-## Fluxo de Execução do Projeto
+## Fluxo de ExecuÃ§Ã£o do Projeto
 
 ```text
 Main.java
-  ?
+  â†“
 Facade.java
-  ?
+  â†“
 Services (UsuarioService, AmizadeService, RecadoService, SessionService)
-  ?
+  â†“
 Models (Usuario, Amizade, Recado, Session)
-  ?
+  â†“
 Repository
-  ?
+  â†“
 Exceptions (Tratamento de erros)
 ```
 
 ---
 
-## Importante Para a Execução do Projeto
+## Importante Para a ExecuÃ§Ã£o do Projeto
 
-### Use a SDK ou JDK compatível e a Codificação Correta (ISO 8859-1)
+### Use a SDK ou JDK compatÃ­vel e a CodificaÃ§Ã£o Correta (ISO 8859-1)
 
-* O projeto utiliza a codificação **ISO 8859-1**. Certifique-se de configurar a sua IDE para utilizar esse encoding na compilação e leitura dos arquivos, do contrário caracteres especiais podem ficar corrompidos.
-* Por favor, não use a `openjdk20/openjdk25` sugerida automaticamente pelas IDEs e não execute fora da raiz do projeto.
+* O projeto utiliza a codificaÃ§Ã£o **ISO 8859-1**. Certifique-se de configurar a sua IDE para utilizar esse encoding na compilaÃ§Ã£o e leitura dos arquivos, do contrÃ¡rio caracteres especiais podem ficar corrompidos.
+* Por favor, nÃ£o use a `openjdk20/openjdk25` sugerida automaticamente pelas IDEs e nÃ£o execute fora da raiz do projeto.
 
-### Possíveis erros se a SDK/JDK correta ou a codificação não for utilizada, ou se o projeto for executado fora da pasta raiz:
+### PossÃ­veis erros se a SDK/JDK correta ou a codificaÃ§Ã£o nÃ£o for utilizada, ou se o projeto for executado fora da pasta raiz:
 
-* Falha de compilação
-* Falha de execução
+* Falha de compilaÃ§Ã£o
+* Falha de execuÃ§Ã£o
 * Problemas com caracteres acentuados
 
 ---
 
-Cada camada tem um propósito claro e bem definido, visando facilitar a legibilidade, manutenção e escalabilidade do sistema para as entregas das próximas Milestones.
+Cada camada tem um propÃ³sito claro e bem definido, visando facilitar a legibilidade, manutenÃ§Ã£o e escalabilidade do sistema para as entregas das prÃ³ximas Milestones.
