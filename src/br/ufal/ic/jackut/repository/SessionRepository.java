@@ -17,7 +17,7 @@ public class SessionRepository {
                     new BufferedOutputStream(new FileOutputStream(path)));
             encoder.writeObject(sessoesList);
             encoder.close();
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             throw new FalhaAoSalvarException("Falha ao salvar as sess\u00f5es");
         }
     }
@@ -31,7 +31,7 @@ public class SessionRepository {
             List<Session> sessoesList = (List<Session>) decoder.readObject();
             decoder.close();
             return sessoesList;
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             return new ArrayList<>();
         }
     }

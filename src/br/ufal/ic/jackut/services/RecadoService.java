@@ -3,7 +3,6 @@ package br.ufal.ic.jackut.services;
 import br.ufal.ic.jackut.models.Recado;
 import br.ufal.ic.jackut.models.Usuario;
 import br.ufal.ic.jackut.repository.RecadoRepository;
-import br.ufal.ic.jackut.repository.UsuarioRepository;
 import br.ufal.ic.jackut.exceptions.SessaoInvalidaException;
 import br.ufal.ic.jackut.exceptions.UsuarioNaoCadastradoException;
 import br.ufal.ic.jackut.exceptions.AutoRecadoException;
@@ -20,9 +19,9 @@ public class RecadoService {
         this.recados = RecadoRepository.load();
     }
 
-    public void enviarRecado(String sessionId, String destinatario, String texto, SessionService sessionService) 
-            throws SessaoInvalidaException, UsuarioNaoCadastradoException, AutoRecadoException, 
-                   br.ufal.ic.jackut.exceptions.FalhaAoSalvarException {
+    public void enviarRecado(String sessionId, String destinatario, String texto, SessionService sessionService)
+            throws SessaoInvalidaException, UsuarioNaoCadastradoException, AutoRecadoException,
+            br.ufal.ic.jackut.exceptions.FalhaAoSalvarException {
         Usuario usuarioLogado = sessionService.obterUsuarioDaSessao(sessionId);
         Validador.validarSessao(usuarioLogado);
 
@@ -38,7 +37,7 @@ public class RecadoService {
         RecadoRepository.save(recados);
     }
 
-    public String lerRecado(String sessionId, SessionService sessionService) 
+    public String lerRecado(String sessionId, SessionService sessionService)
             throws SessaoInvalidaException, NaoHaRecadosException, br.ufal.ic.jackut.exceptions.FalhaAoSalvarException {
         Usuario usuarioLogado = sessionService.obterUsuarioDaSessao(sessionId);
         Validador.validarSessao(usuarioLogado);

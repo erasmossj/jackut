@@ -46,7 +46,7 @@ public class Usuario implements Serializable {
 	}
 
 	public Map<String, String> getAtributos() {
-		return atributos;
+		return new java.util.HashMap<>(atributos);
 	}
 
 	public void setAtributos(Map<String, String> atributos) {

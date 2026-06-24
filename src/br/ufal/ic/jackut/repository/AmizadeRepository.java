@@ -1,6 +1,6 @@
 package br.ufal.ic.jackut.repository;
 
-import br.ufal.ic.jackut.models.Amizade;
+import br.ufal.ic.jackut.models.Relacionamento;
 import br.ufal.ic.jackut.exceptions.FalhaAoSalvarException;
 
 import java.beans.XMLDecoder;
@@ -10,28 +10,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AmizadeRepository {
-    public static void save(List<Amizade> amizadesList) throws FalhaAoSalvarException {
+    public static void save(List<Relacionamento> relacionamentosList) throws FalhaAoSalvarException {
         try {
             String path = "data/amizade_data.xml";
             XMLEncoder encoder = new XMLEncoder(
                     new BufferedOutputStream(new FileOutputStream(path)));
-            encoder.writeObject(amizadesList);
+            encoder.writeObject(relacionamentosList);
             encoder.close();
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             throw new FalhaAoSalvarException("Falha ao salvar as amizades");
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Amizade> load() {
+    public static List<Relacionamento> load() {
         try {
             String path = "data/amizade_data.xml";
             XMLDecoder decoder = new XMLDecoder(
                     new BufferedInputStream(new FileInputStream(path)));
-            List<Amizade> amizadesList = (List<Amizade>) decoder.readObject();
+            List<Relacionamento> relacionamentosList = (List<Relacionamento>) decoder.readObject();
             decoder.close();
-            return amizadesList;
-        } catch (Exception e) {
+            return relacionamentosList;
+        } catch (FileNotFoundException e) {
             return new ArrayList<>();
         }
     }
