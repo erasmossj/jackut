@@ -46,7 +46,8 @@ public class Facade {
 		this.usuarioService.editarPerfil(id, atributo, valor, sessionService);
 	}
 
-	public void adicionarAmigo(String id, String amigo) throws Exception {
+	public void adicionarAmigo(String id, String amigo) throws SessaoInvalidaException, UsuarioNaoCadastradoException, 
+			RelacionamentoInvalidoException, AmizadeJaAdicionadaException, AmizadePendenteException, FalhaAoSalvarException {
 		this.amizadeService.adicionarAmigo(id, amigo, sessionService);
 	}
 

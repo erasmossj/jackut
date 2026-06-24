@@ -18,7 +18,7 @@ public class UsuarioRepository {
                     new BufferedOutputStream(new FileOutputStream(path)));
             encoder.writeObject(usuariosList);
             encoder.close();
-        } catch (Exception e) {
+        } catch (RuntimeException | FileNotFoundException e) {
             throw new FalhaAoSalvarException("Falha ao salvar os usuários");
         }
     }
@@ -32,7 +32,7 @@ public class UsuarioRepository {
             List<Usuario> usuariosList = (List<Usuario>) decoder.readObject();
             decoder.close();
             return usuariosList;
-        } catch (Exception e) {
+        } catch (RuntimeException | FileNotFoundException e) {
             return new ArrayList<>();
         }
     }
