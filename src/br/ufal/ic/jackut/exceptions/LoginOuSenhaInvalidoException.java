@@ -9,4 +9,3 @@ public class LoginOuSenhaInvalidoException extends Exception {
         super(message);
     }
 }
-

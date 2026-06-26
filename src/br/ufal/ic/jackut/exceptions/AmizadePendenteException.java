@@ -4,4 +4,8 @@ public class AmizadePendenteException extends Exception {
     public AmizadePendenteException() {
         super("Usuário já está adicionado como amigo, esperando aceitação do convite.");
     }
+
+    public AmizadePendenteException(String message) {
+        super(message);
+    }
 }

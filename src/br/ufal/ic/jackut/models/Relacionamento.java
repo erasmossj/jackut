@@ -43,4 +43,7 @@ public abstract class Relacionamento {
     public abstract void validar() throws RelacionamentoInvalidoException;
 
     public abstract void aplicar();
+
+    public abstract String tipo();
 }
+
