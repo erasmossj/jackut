@@ -2,6 +2,7 @@ package br.ufal.ic.jackut;
 
 import br.ufal.ic.jackut.services.*;
 import br.ufal.ic.jackut.models.Usuario;
+import br.ufal.ic.jackut.models.Relacionamento;
 import br.ufal.ic.jackut.exceptions.*;
 
 public class Facade {
@@ -27,9 +28,11 @@ public class Facade {
         this.comunidadeService.clear();
     }
 
-    public void encerrarSistema() {}
+    public void encerrarSistema() {
+    }
 
-    public void criarUsuario(String login, String senha, String nome) throws ContaNaExisteException, LoginInvalidoException, SenhaInvalidaException, FalhaAoSalvarException {
+    public void criarUsuario(String login, String senha, String nome)
+            throws ContaNaExisteException, LoginInvalidoException, SenhaInvalidaException, FalhaAoSalvarException {
         this.usuarioService.criarUsuario(login, senha, nome);
     }
 
@@ -37,7 +40,8 @@ public class Facade {
         return this.usuarioService.abrirSessao(login, senha, sessionService);
     }
 
-    public String getAtributoUsuario(String login, String atributo) throws UsuarioNaoCadastradoException, AtributoNaoPreenchidoException {
+    public String getAtributoUsuario(String login, String atributo)
+            throws UsuarioNaoCadastradoException, AtributoNaoPreenchidoException {
         return this.usuarioService.getAtributoUsuario(login, atributo);
     }
 
@@ -45,7 +49,9 @@ public class Facade {
         this.usuarioService.editarPerfil(id, atributo, valor, sessionService);
     }
 
-    public void adicionarAmigo(String id, String amigo) throws SessaoInvalidaException, UsuarioNaoCadastradoException, RelacionamentoInvalidoException, AmizadeJaAdicionadaException, AmizadePendenteException, FalhaAoSalvarException, InimigoException {
+    public void adicionarAmigo(String id, String amigo)
+            throws SessaoInvalidaException, UsuarioNaoCadastradoException, RelacionamentoInvalidoException,
+            AmizadeJaAdicionadaException, AmizadePendenteException, FalhaAoSalvarException, InimigoException {
         this.amizadeService.adicionarAmigo(id, amigo, sessionService);
     }
 
@@ -57,21 +63,26 @@ public class Facade {
         String login = arg;
         try {
             Usuario u = sessionService.obterUsuarioDaSessao(arg);
-            if (u != null) login = u.getLogin();
-        } catch (Exception e) {}
+            if (u != null)
+                login = u.getLogin();
+        } catch (Exception e) {
+        }
         return this.amizadeService.getAmigos(login);
     }
 
-    public void enviarRecado(String id, String destinatario, String recado) throws SessaoInvalidaException, UsuarioNaoCadastradoException, AutoRecadoException, InimigoException, FalhaAoSalvarException {
+    public void enviarRecado(String id, String destinatario, String recado) throws SessaoInvalidaException,
+            UsuarioNaoCadastradoException, AutoRecadoException, InimigoException, FalhaAoSalvarException {
         this.amizadeService.verificarInimigo(sessionService.obterUsuarioDaSessao(id).getLogin(), destinatario);
         this.recadoService.enviarRecado(id, destinatario, recado, sessionService);
     }
 
-    public String lerRecado(String id) throws SessaoInvalidaException, br.ufal.ic.jackut.exceptions.NaoHaRecadosException, FalhaAoSalvarException {
+    public String lerRecado(String id)
+            throws SessaoInvalidaException, br.ufal.ic.jackut.exceptions.NaoHaRecadosException, FalhaAoSalvarException {
         return this.recadoService.lerRecado(id, sessionService);
     }
 
-    public void criarComunidade(String id, String nome, String descricao) throws SessaoInvalidaException, ComunidadeJaExisteException, FalhaAoSalvarException {
+    public void criarComunidade(String id, String nome, String descricao)
+            throws SessaoInvalidaException, ComunidadeJaExisteException, FalhaAoSalvarException {
         this.comunidadeService.criarComunidade(id, nome, descricao, sessionService);
     }
 
@@ -91,16 +102,20 @@ public class Facade {
         String login = arg;
         try {
             Usuario u = sessionService.obterUsuarioDaSessao(arg);
-            if (u != null) login = u.getLogin();
-        } catch (Exception e) {}
+            if (u != null)
+                login = u.getLogin();
+        } catch (Exception e) {
+        }
         return this.comunidadeService.getComunidades(login);
     }
 
-    public void adicionarComunidade(String sessao, String nome) throws SessaoInvalidaException, ComunidadeNaoExisteException, UsuarioJaPertenceException, FalhaAoSalvarException {
+    public void adicionarComunidade(String sessao, String nome) throws SessaoInvalidaException,
+            ComunidadeNaoExisteException, UsuarioJaPertenceException, FalhaAoSalvarException {
         this.comunidadeService.participarComunidade(sessao, nome, sessionService);
     }
 
-    public void enviarMensagem(String id, String comunidade, String mensagem) throws SessaoInvalidaException, ComunidadeNaoExisteException, ApenasMembrosException, MensagemSemConteudoException, FalhaAoSalvarException {
+    public void enviarMensagem(String id, String comunidade, String mensagem) throws SessaoInvalidaException,
+            ComunidadeNaoExisteException, ApenasMembrosException, MensagemSemConteudoException, FalhaAoSalvarException {
         this.comunidadeService.enviarMensagem(id, comunidade, mensagem, sessionService);
     }
 
@@ -108,7 +123,8 @@ public class Facade {
         return this.comunidadeService.lerMensagem(id, sessionService);
     }
 
-    public void adicionarIdolo(String id, String idolo) throws SessaoInvalidaException, UsuarioNaoCadastradoException, RelacionamentoInvalidoException, RelacionamentoJaExisteException, FalhaAoSalvarException, InimigoException {
+    public void adicionarIdolo(String id, String idolo) throws SessaoInvalidaException, UsuarioNaoCadastradoException,
+            RelacionamentoInvalidoException, RelacionamentoJaExisteException, FalhaAoSalvarException, InimigoException {
         this.amizadeService.adicionarRelacionamento(id, "idolatria", idolo, sessionService);
     }
 
@@ -120,37 +136,44 @@ public class Facade {
         return this.amizadeService.getFas(login);
     }
 
-    public void adicionarPaquera(String id, String paquera) throws Exception {
+    public void adicionarPaquera(String id, String paquera) throws SessaoInvalidaException,
+            UsuarioNaoCadastradoException, RelacionamentoInvalidoException, RelacionamentoJaExisteException,
+            FalhaAoSalvarException, InimigoException, UsuarioNaoCadastradoException, AtributoNaoPreenchidoException {
         this.amizadeService.adicionarRelacionamento(id, "paquera", paquera, sessionService);
         String meuLogin = sessionService.obterUsuarioDaSessao(id).getLogin();
-        
+
         boolean eleMePaquera = false;
-        for (br.ufal.ic.jackut.models.Relacionamento rel : this.amizadeService.getAmizades()) {
-            if (rel.tipo().equals("Paquera") && rel.getSolicitante().equals(paquera) && rel.getSolicitado().equals(meuLogin)) {
+        for (Relacionamento rel : this.amizadeService.getAmizades()) {
+            if (rel.tipo().equals("Paquera") && rel.getSolicitante().equals(paquera)
+                    && rel.getSolicitado().equals(meuLogin)) {
                 eleMePaquera = true;
                 break;
             }
         }
-        
+
         if (eleMePaquera) {
             String meuNome = this.usuarioService.getAtributoUsuario(meuLogin, "nome");
             String nomeDele = this.usuarioService.getAtributoUsuario(paquera, "nome");
-            
-            this.recadoService.getRecados().add(new br.ufal.ic.jackut.models.Recado("Jackut", meuLogin, nomeDele + " é seu paquera - Recado do Jackut."));
-            this.recadoService.getRecados().add(new br.ufal.ic.jackut.models.Recado("Jackut", paquera, meuNome + " é seu paquera - Recado do Jackut."));
+
+            this.recadoService.getRecados().add(new br.ufal.ic.jackut.models.Recado("Jackut", meuLogin,
+                    nomeDele + " ï¿½ seu paquera - Recado do Jackut."));
+            this.recadoService.getRecados().add(new br.ufal.ic.jackut.models.Recado("Jackut", paquera,
+                    meuNome + " ï¿½ seu paquera - Recado do Jackut."));
             br.ufal.ic.jackut.repository.RecadoRepository.save(this.recadoService.getRecados());
         }
     }
 
-    public boolean ehPaquera(String id, String paquera) throws Exception {
+    public boolean ehPaquera(String id, String paquera) {
         return this.amizadeService.ehPaquera(id, paquera, sessionService);
     }
 
-    public String getPaqueras(String id) throws Exception {
+    public String getPaqueras(String id) {
         return this.amizadeService.getPaqueras(id, sessionService);
     }
 
-    public void adicionarInimigo(String id, String inimigo) throws SessaoInvalidaException, UsuarioNaoCadastradoException, RelacionamentoInvalidoException, RelacionamentoJaExisteException, FalhaAoSalvarException, InimigoException {
+    public void adicionarInimigo(String id, String inimigo)
+            throws SessaoInvalidaException, UsuarioNaoCadastradoException, RelacionamentoInvalidoException,
+            RelacionamentoJaExisteException, FalhaAoSalvarException, InimigoException {
         this.amizadeService.adicionarRelacionamento(id, "inimizade", inimigo, sessionService);
     }
 
@@ -158,7 +181,7 @@ public class Facade {
         Usuario u = sessionService.obterUsuarioDaSessao(id);
         br.ufal.ic.jackut.utils.Validador.validarSessao(u);
         String login = u.getLogin();
-        
+
         this.amizadeService.removerUsuario(login);
         this.recadoService.removerUsuario(login);
         this.comunidadeService.removerUsuario(login);

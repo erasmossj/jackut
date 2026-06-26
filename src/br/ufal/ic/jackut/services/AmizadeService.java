@@ -184,7 +184,7 @@ public class AmizadeService {
         return "{" + String.join(",", fas) + "}";
     }
 
-    public boolean ehPaquera(String id, String paquera, SessionService sessionService) throws Exception {
+    public boolean ehPaquera(String id, String paquera, SessionService sessionService) {
         Usuario u = sessionService.obterUsuarioDaSessao(id);
         for (Relacionamento rel : relacionamentos) {
             if (rel.tipo().equals("Paquera")) {
@@ -196,7 +196,7 @@ public class AmizadeService {
         return false;
     }
 
-    public String getPaqueras(String id, SessionService sessionService) throws Exception {
+    public String getPaqueras(String id, SessionService sessionService) {
         Usuario u = sessionService.obterUsuarioDaSessao(id);
         List<String> paqueras = new ArrayList<>();
         for (Relacionamento rel : relacionamentos) {
