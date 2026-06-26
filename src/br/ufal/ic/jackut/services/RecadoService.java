@@ -7,6 +7,7 @@ import br.ufal.ic.jackut.exceptions.SessaoInvalidaException;
 import br.ufal.ic.jackut.exceptions.UsuarioNaoCadastradoException;
 import br.ufal.ic.jackut.exceptions.AutoRecadoException;
 import br.ufal.ic.jackut.exceptions.NaoHaRecadosException;
+import br.ufal.ic.jackut.exceptions.FalhaAoSalvarException;
 import br.ufal.ic.jackut.utils.Validador;
 
 import java.util.List;
@@ -60,6 +61,14 @@ public class RecadoService {
     public void clear() {
         this.recados = new ArrayList<>();
         RecadoRepository.clear();
+    }
+
+    public void removerUsuario(String login) {
+        recados.removeIf(r -> r.getRemetente().equals(login) || r.getDestinatario().equals(login));
+        try {
+            RecadoRepository.save(recados);
+        } catch (FalhaAoSalvarException e) {
+        }
     }
 
     public List<Recado> getRecados() {

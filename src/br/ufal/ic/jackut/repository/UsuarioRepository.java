@@ -1,4 +1,4 @@
-package br.ufal.ic.jackut.repository;
+ï»¿package br.ufal.ic.jackut.repository;
 
 import br.ufal.ic.jackut.exceptions.UsuarioNaoCadastradoException;
 import br.ufal.ic.jackut.exceptions.FalhaAoSalvarException;
@@ -19,7 +19,7 @@ public class UsuarioRepository {
             encoder.writeObject(usuariosList);
             encoder.close();
         } catch (RuntimeException | FileNotFoundException e) {
-            throw new FalhaAoSalvarException("Falha ao salvar os usuários");
+            throw new FalhaAoSalvarException("Falha ao salvar os usu\ufffdrios");
         }
     }
 
@@ -62,3 +62,4 @@ public class UsuarioRepository {
         return false;
     }
 }
+

@@ -9,5 +9,3 @@ public class SessaoInvalidaException extends Exception {
 		super(message);
 	}
 }
-
-

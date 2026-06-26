@@ -9,5 +9,3 @@ public class ContaNaExisteException extends Exception {
         super(message);
     }
 }
-
-

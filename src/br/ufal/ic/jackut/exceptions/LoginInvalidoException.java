@@ -9,5 +9,3 @@ public class LoginInvalidoException extends Exception {
         super(message);
     }
 }
-
-

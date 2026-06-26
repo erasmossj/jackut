@@ -4,4 +4,8 @@ public class AmizadeJaAdicionadaException extends Exception {
     public AmizadeJaAdicionadaException() {
         super("Usuário já está adicionado como amigo.");
     }
+
+    public AmizadeJaAdicionadaException(String message) {
+        super(message);
+    }
 }

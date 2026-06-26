@@ -9,4 +9,3 @@ public class SenhaInvalidaException extends Exception {
         super(message);
     }
 }
-

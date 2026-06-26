@@ -1,24 +1,24 @@
 ﻿package br.ufal.ic.jackut.models;
 
 import br.ufal.ic.jackut.exceptions.RelacionamentoInvalidoException;
-import br.ufal.ic.jackut.exceptions.AutoAmizadeException;
+import br.ufal.ic.jackut.exceptions.AutoPaqueraException;
 
-public class Amizade extends Relacionamento {
-    public Amizade() {
+public class Paquera extends Relacionamento {
+    public Paquera() {
         super();
     }
 
-    public Amizade(String solicitante, String solicitado, boolean aceito) {
+    public Paquera(String solicitante, String solicitado, boolean aceito) {
         super(solicitante, solicitado, aceito);
     }
 
     @Override
-    public String tipo() { return "Amizade"; }
+    public String tipo() { return "Paquera"; }
 
     @Override
     public void validar() throws RelacionamentoInvalidoException {
         if (getSolicitante().equals(getSolicitado())) {
-            throw new AutoAmizadeException();
+            throw new AutoPaqueraException();
         }
     }
 
