@@ -1,9 +1,10 @@
 package br.ufal.ic.jackut;
 
 import br.ufal.ic.jackut.services.*;
-import br.ufal.ic.jackut.models.Usuario;
-import br.ufal.ic.jackut.models.Relacionamento;
+import br.ufal.ic.jackut.models.*;
+import br.ufal.ic.jackut.repository.*;
 import br.ufal.ic.jackut.exceptions.*;
+import br.ufal.ic.jackut.utils.*;
 
 public class Facade {
     public SessionService sessionService;
@@ -14,7 +15,7 @@ public class Facade {
 
     public Facade() {
         this.sessionService = new SessionService();
-        this.usuarioService = new UsuarioService(br.ufal.ic.jackut.repository.UsuarioRepository.load());
+        this.usuarioService = new UsuarioService(UsuarioRepository.load());
         this.amizadeService = new AmizadeService();
         this.recadoService = new RecadoService();
         this.comunidadeService = new ComunidadeService();
@@ -155,11 +156,11 @@ public class Facade {
             String meuNome = this.usuarioService.getAtributoUsuario(meuLogin, "nome");
             String nomeDele = this.usuarioService.getAtributoUsuario(paquera, "nome");
 
-            this.recadoService.getRecados().add(new br.ufal.ic.jackut.models.Recado("Jackut", meuLogin,
-                    nomeDele + " ï¿½ seu paquera - Recado do Jackut."));
-            this.recadoService.getRecados().add(new br.ufal.ic.jackut.models.Recado("Jackut", paquera,
-                    meuNome + " ï¿½ seu paquera - Recado do Jackut."));
-            br.ufal.ic.jackut.repository.RecadoRepository.save(this.recadoService.getRecados());
+            this.recadoService.getRecados().add(new Recado("Jackut", meuLogin,
+                    nomeDele + " é seu paquera - Recado do Jackut."));
+            this.recadoService.getRecados().add(new Recado("Jackut", paquera,
+                    meuNome + " é seu paquera - Recado do Jackut."));
+            RecadoRepository.save(this.recadoService.getRecados());
         }
     }
 
@@ -179,7 +180,7 @@ public class Facade {
 
     public void removerUsuario(String id) throws SessaoInvalidaException, FalhaAoSalvarException {
         Usuario u = sessionService.obterUsuarioDaSessao(id);
-        br.ufal.ic.jackut.utils.Validador.validarSessao(u);
+        Validador.validarSessao(u);
         String login = u.getLogin();
 
         this.amizadeService.removerUsuario(login);

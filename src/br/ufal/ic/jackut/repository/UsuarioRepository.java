@@ -19,7 +19,7 @@ public class UsuarioRepository {
             encoder.writeObject(usuariosList);
             encoder.close();
         } catch (RuntimeException | FileNotFoundException e) {
-            throw new FalhaAoSalvarException("Falha ao salvar os usu\ufffdrios");
+            throw new FalhaAoSalvarException("Falha ao salvar os usuários");
         }
     }
 
@@ -62,4 +62,3 @@ public class UsuarioRepository {
         return false;
     }
 }
-

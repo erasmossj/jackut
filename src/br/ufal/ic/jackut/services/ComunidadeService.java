@@ -11,6 +11,8 @@ import br.ufal.ic.jackut.exceptions.SessaoInvalidaException;
 import br.ufal.ic.jackut.exceptions.FalhaAoSalvarException;
 import br.ufal.ic.jackut.exceptions.ApenasMembrosException;
 import br.ufal.ic.jackut.exceptions.MensagemSemConteudoException;
+import br.ufal.ic.jackut.exceptions.UsuarioNaoCadastradoException;
+import br.ufal.ic.jackut.exceptions.NaoHaMensagensException;
 import br.ufal.ic.jackut.utils.Validador;
 
 import java.util.List;
@@ -58,7 +60,7 @@ public class ComunidadeService {
         throw new ComunidadeNaoExisteException();
     }
 
-    public String getComunidades(String login) throws br.ufal.ic.jackut.exceptions.UsuarioNaoCadastradoException {
+    public String getComunidades(String login) throws UsuarioNaoCadastradoException {
         Validador.validarUsuarioExistente(login);
         List<Comunidade> doUsuario = new java.util.ArrayList<>();
         for (Comunidade com : comunidades) {
@@ -136,7 +138,7 @@ public class ComunidadeService {
     }
 
     public String lerMensagem(String sessionId, SessionService sessionService)
-            throws SessaoInvalidaException, br.ufal.ic.jackut.exceptions.NaoHaMensagensException {
+            throws SessaoInvalidaException, NaoHaMensagensException {
         Usuario usuarioLogado = sessionService.obterUsuarioDaSessao(sessionId);
         Validador.validarSessao(usuarioLogado);
         String login = usuarioLogado.getLogin();
@@ -156,7 +158,7 @@ public class ComunidadeService {
                 }
             }
         }
-        throw new br.ufal.ic.jackut.exceptions.NaoHaMensagensException();
+        throw new NaoHaMensagensException();
     }
 
     public void removerUsuario(String login) throws FalhaAoSalvarException {

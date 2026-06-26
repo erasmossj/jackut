@@ -18,7 +18,7 @@ public class SessionRepository {
             encoder.writeObject(sessoesList);
             encoder.close();
         } catch (FileNotFoundException e) {
-            throw new FalhaAoSalvarException("Falha ao salvar as sess\u00f5es");
+            throw new FalhaAoSalvarException("Falha ao salvar as sessões");
         }
     }
 
@@ -40,8 +40,7 @@ public class SessionRepository {
         try {
             save(new ArrayList<>());
         } catch (FalhaAoSalvarException e) {
-            throw new FalhaAoSalvarException("Falha ao limpar as sess\ufffdes");
+            throw new FalhaAoSalvarException("Falha ao limpar as sessões");
         }
     }
 }
-

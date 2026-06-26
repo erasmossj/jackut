@@ -1,9 +1,11 @@
 package br.ufal.ic.jackut.models;
 
 import br.ufal.ic.jackut.exceptions.RelacionamentoInvalidoException;
+import br.ufal.ic.jackut.exceptions.TipoRelacionamentoInvalidoException;
 
 public class RelacionamentoFactory {
-    public static Relacionamento criarRelacionamento(String tipo, String solicitante, String solicitado) throws RelacionamentoInvalidoException {
+    public static Relacionamento criarRelacionamento(String tipo, String solicitante, String solicitado)
+            throws RelacionamentoInvalidoException {
         switch (tipo.toLowerCase()) {
             case "amizade":
                 return new Amizade(solicitante, solicitado, false);
@@ -14,7 +16,7 @@ public class RelacionamentoFactory {
             case "inimizade":
                 return new Inimizade(solicitante, solicitado, false);
             default:
-                throw new br.ufal.ic.jackut.exceptions.TipoRelacionamentoInvalidoException();
+                throw new TipoRelacionamentoInvalidoException();
         }
     }
 }

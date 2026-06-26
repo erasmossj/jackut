@@ -22,7 +22,7 @@ public class RecadoService {
 
     public void enviarRecado(String sessionId, String destinatario, String texto, SessionService sessionService)
             throws SessaoInvalidaException, UsuarioNaoCadastradoException, AutoRecadoException,
-            br.ufal.ic.jackut.exceptions.FalhaAoSalvarException {
+            FalhaAoSalvarException {
         Usuario usuarioLogado = sessionService.obterUsuarioDaSessao(sessionId);
         Validador.validarSessao(usuarioLogado);
 
@@ -39,7 +39,7 @@ public class RecadoService {
     }
 
     public String lerRecado(String sessionId, SessionService sessionService)
-            throws SessaoInvalidaException, NaoHaRecadosException, br.ufal.ic.jackut.exceptions.FalhaAoSalvarException {
+            throws SessaoInvalidaException, NaoHaRecadosException, FalhaAoSalvarException {
         Usuario usuarioLogado = sessionService.obterUsuarioDaSessao(sessionId);
         Validador.validarSessao(usuarioLogado);
 
