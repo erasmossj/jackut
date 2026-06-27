@@ -3,11 +3,11 @@ package br.ufal.ic.jackut.services;
 import br.ufal.ic.jackut.models.Recado;
 import br.ufal.ic.jackut.models.Usuario;
 import br.ufal.ic.jackut.repository.RecadoRepository;
-import br.ufal.ic.jackut.repository.UsuarioRepository;
 import br.ufal.ic.jackut.exceptions.SessaoInvalidaException;
 import br.ufal.ic.jackut.exceptions.UsuarioNaoCadastradoException;
 import br.ufal.ic.jackut.exceptions.AutoRecadoException;
 import br.ufal.ic.jackut.exceptions.NaoHaRecadosException;
+import br.ufal.ic.jackut.exceptions.FalhaAoSalvarException;
 import br.ufal.ic.jackut.utils.Validador;
 
 import java.util.List;
@@ -20,9 +20,9 @@ public class RecadoService {
         this.recados = RecadoRepository.load();
     }
 
-    public void enviarRecado(String sessionId, String destinatario, String texto, SessionService sessionService) 
-            throws SessaoInvalidaException, UsuarioNaoCadastradoException, AutoRecadoException, 
-                   br.ufal.ic.jackut.exceptions.FalhaAoSalvarException {
+    public void enviarRecado(String sessionId, String destinatario, String texto, SessionService sessionService)
+            throws SessaoInvalidaException, UsuarioNaoCadastradoException, AutoRecadoException,
+            FalhaAoSalvarException {
         Usuario usuarioLogado = sessionService.obterUsuarioDaSessao(sessionId);
         Validador.validarSessao(usuarioLogado);
 
@@ -38,8 +38,8 @@ public class RecadoService {
         RecadoRepository.save(recados);
     }
 
-    public String lerRecado(String sessionId, SessionService sessionService) 
-            throws SessaoInvalidaException, NaoHaRecadosException, br.ufal.ic.jackut.exceptions.FalhaAoSalvarException {
+    public String lerRecado(String sessionId, SessionService sessionService)
+            throws SessaoInvalidaException, NaoHaRecadosException, FalhaAoSalvarException {
         Usuario usuarioLogado = sessionService.obterUsuarioDaSessao(sessionId);
         Validador.validarSessao(usuarioLogado);
 
@@ -61,6 +61,14 @@ public class RecadoService {
     public void clear() {
         this.recados = new ArrayList<>();
         RecadoRepository.clear();
+    }
+
+    public void removerUsuario(String login) {
+        recados.removeIf(r -> r.getRemetente().equals(login) || r.getDestinatario().equals(login));
+        try {
+            RecadoRepository.save(recados);
+        } catch (FalhaAoSalvarException e) {
+        }
     }
 
     public List<Recado> getRecados() {

@@ -4,4 +4,8 @@ public class AutoRecadoException extends Exception {
     public AutoRecadoException() {
         super("Usuário não pode enviar recado para si mesmo.");
     }
+
+    public AutoRecadoException(String message) {
+        super(message);
+    }
 }

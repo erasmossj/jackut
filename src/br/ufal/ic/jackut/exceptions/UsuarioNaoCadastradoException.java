@@ -9,5 +9,3 @@ public class UsuarioNaoCadastradoException extends Exception {
         super(message);
     }
 }
-
-

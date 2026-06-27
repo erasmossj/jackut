@@ -1,4 +1,4 @@
-package br.ufal.ic.jackut.repository;
+﻿package br.ufal.ic.jackut.repository;
 
 import br.ufal.ic.jackut.models.Session;
 import br.ufal.ic.jackut.exceptions.FalhaAoSalvarException;
@@ -17,8 +17,8 @@ public class SessionRepository {
                     new BufferedOutputStream(new FileOutputStream(path)));
             encoder.writeObject(sessoesList);
             encoder.close();
-        } catch (Exception e) {
-            throw new FalhaAoSalvarException("Falha ao salvar as sess\u00f5es");
+        } catch (FileNotFoundException e) {
+            throw new FalhaAoSalvarException("Falha ao salvar as sessões");
         }
     }
 
@@ -31,7 +31,7 @@ public class SessionRepository {
             List<Session> sessoesList = (List<Session>) decoder.readObject();
             decoder.close();
             return sessoesList;
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             return new ArrayList<>();
         }
     }
@@ -40,7 +40,7 @@ public class SessionRepository {
         try {
             save(new ArrayList<>());
         } catch (FalhaAoSalvarException e) {
-            throw new FalhaAoSalvarException("Falha ao limpar as sess�es");
+            throw new FalhaAoSalvarException("Falha ao limpar as sessões");
         }
     }
 }

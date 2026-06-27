@@ -1,7 +1,11 @@
 package br.ufal.ic.jackut.exceptions;
 
-public class AutoAmizadeException extends Exception {
+public class AutoAmizadeException extends RelacionamentoInvalidoException {
     public AutoAmizadeException() {
         super("Usuário não pode adicionar a si mesmo como amigo.");
+    }
+
+    public AutoAmizadeException(String message) {
+        super(message);
     }
 }

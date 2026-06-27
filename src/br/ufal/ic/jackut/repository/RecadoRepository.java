@@ -17,7 +17,7 @@ public class RecadoRepository {
                     new BufferedOutputStream(new FileOutputStream(path)));
             encoder.writeObject(recadosList);
             encoder.close();
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             throw new FalhaAoSalvarException("Falha ao salvar os recados");
         }
     }
@@ -31,7 +31,7 @@ public class RecadoRepository {
             List<Recado> recadosList = (List<Recado>) decoder.readObject();
             decoder.close();
             return recadosList;
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             return new ArrayList<>();
         }
     }

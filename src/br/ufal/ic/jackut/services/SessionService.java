@@ -37,6 +37,11 @@ public class SessionService {
 		salvarSessoes();
 	}
 
+	public void fecharSessoesDoUsuario(String login) {
+		this.sessoes.removeIf(s -> s.getUsuario() != null && s.getUsuario().getLogin().equals(login));
+		salvarSessoes();
+	}
+
 	public void limpar() {
 		this.sessoes.clear();
 		SessionRepository.clear();

@@ -1,40 +1,31 @@
-package br.ufal.ic.jackut.models;
+﻿package br.ufal.ic.jackut.models;
 
-public class Amizade {
-    private String solicitante;
-    private String solicitado;
-    private boolean aceito;
+import br.ufal.ic.jackut.exceptions.RelacionamentoInvalidoException;
+import br.ufal.ic.jackut.exceptions.AutoAmizadeException;
 
+public class Amizade extends Relacionamento {
     public Amizade() {
+        super();
     }
 
     public Amizade(String solicitante, String solicitado, boolean aceito) {
-        this.solicitante = solicitante;
-        this.solicitado = solicitado;
-        this.aceito = aceito;
+        super(solicitante, solicitado, aceito);
     }
 
-    public String getSolicitante() {
-        return solicitante;
+    @Override
+    public String tipo() { return "Amizade"; }
+
+    @Override
+    public void validar() throws RelacionamentoInvalidoException {
+        if (getSolicitante().equals(getSolicitado())) {
+            throw new AutoAmizadeException();
+        }
     }
 
-    public void setSolicitante(String solicitante) {
-        this.solicitante = solicitante;
-    }
-
-    public String getSolicitado() {
-        return solicitado;
-    }
-
-    public void setSolicitado(String solicitado) {
-        this.solicitado = solicitado;
-    }
-
-    public boolean isAceito() {
-        return aceito;
-    }
-
-    public void setAceito(boolean aceito) {
-        this.aceito = aceito;
+    @Override
+    public void aplicar() {
+        setAceito(true);
     }
 }
+
+

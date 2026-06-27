@@ -75,9 +75,18 @@ public class UsuarioService {
 			throws SessaoInvalidaException {
 		Usuario usuario = sessionService.obterUsuarioDaSessao(id);
 		Validador.validarSessao(usuario);
-		
+
 		usuario.setAtributo(atributo, valor);
 		UsuarioRepository.save(usuariosList);
+	}
+
+	public void removerUsuario(String id, SessionService sessionService) throws SessaoInvalidaException {
+		Usuario usuario = sessionService.obterUsuarioDaSessao(id);
+		Validador.validarSessao(usuario);
+
+		usuariosList.removeIf(u -> u.getLogin().equals(usuario.getLogin()));
+		UsuarioRepository.save(usuariosList);
+		sessionService.fecharSessoesDoUsuario(usuario.getLogin());
 	}
 
 	public void clear() {

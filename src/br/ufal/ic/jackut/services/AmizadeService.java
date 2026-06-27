@@ -1,68 +1,97 @@
 package br.ufal.ic.jackut.services;
 
-import br.ufal.ic.jackut.models.Amizade;
+import br.ufal.ic.jackut.models.Relacionamento;
+import br.ufal.ic.jackut.models.RelacionamentoFactory;
 import br.ufal.ic.jackut.models.Usuario;
 import br.ufal.ic.jackut.repository.AmizadeRepository;
-import br.ufal.ic.jackut.repository.UsuarioRepository;
 import br.ufal.ic.jackut.exceptions.SessaoInvalidaException;
 import br.ufal.ic.jackut.exceptions.UsuarioNaoCadastradoException;
-import br.ufal.ic.jackut.exceptions.AutoAmizadeException;
 import br.ufal.ic.jackut.exceptions.AmizadeJaAdicionadaException;
 import br.ufal.ic.jackut.exceptions.AmizadePendenteException;
+import br.ufal.ic.jackut.exceptions.RelacionamentoInvalidoException;
+import br.ufal.ic.jackut.exceptions.RelacionamentoJaExisteException;
+import br.ufal.ic.jackut.exceptions.FalhaAoSalvarException;
+import br.ufal.ic.jackut.exceptions.IdolatriaJaAdicionadaException;
+import br.ufal.ic.jackut.exceptions.PaqueraJaAdicionadaException;
+import br.ufal.ic.jackut.exceptions.InimizadeJaAdicionadaException;
+import br.ufal.ic.jackut.exceptions.InimigoException;
 import br.ufal.ic.jackut.utils.Validador;
+import br.ufal.ic.jackut.repository.UsuarioRepository;
 
 import java.util.List;
 import java.util.ArrayList;
 
 public class AmizadeService {
-    private List<Amizade> amizades;
+    private List<Relacionamento> relacionamentos;
 
     public AmizadeService() {
-        this.amizades = AmizadeRepository.load();
+        this.relacionamentos = AmizadeRepository.load();
     }
 
-    public void adicionarAmigo(String sessionId, String amigoLogin, SessionService sessionService) 
-            throws SessaoInvalidaException, UsuarioNaoCadastradoException, AutoAmizadeException, 
-                   AmizadeJaAdicionadaException, AmizadePendenteException, br.ufal.ic.jackut.exceptions.FalhaAoSalvarException {
+    public void verificarInimigo(String meuLogin, String alvoLogin) throws InimigoException {
+        for (Relacionamento rel : relacionamentos) {
+            if (rel.tipo().equals("Inimizade")) {
+                if ((rel.getSolicitante().equals(meuLogin) && rel.getSolicitado().equals(alvoLogin)) ||
+                        (rel.getSolicitante().equals(alvoLogin) && rel.getSolicitado().equals(meuLogin))) {
+                    String nome = "";
+                    for (Usuario u : UsuarioRepository.load()) {
+                        if (u.getLogin().equals(alvoLogin)) {
+                            nome = u.getNome();
+                        }
+                    }
+                    throw new InimigoException("Função inválida: " + nome + " é seu inimigo.");
+                }
+            }
+        }
+    }
+
+    public void adicionarAmigo(String sessionId, String amigoLogin, SessionService sessionService)
+            throws SessaoInvalidaException, UsuarioNaoCadastradoException, RelacionamentoInvalidoException,
+            AmizadeJaAdicionadaException, AmizadePendenteException,
+            FalhaAoSalvarException, InimigoException {
         Usuario usuarioLogado = sessionService.obterUsuarioDaSessao(sessionId);
         Validador.validarSessao(usuarioLogado);
 
         String meuLogin = usuarioLogado.getLogin();
-
         Validador.validarUsuarioExistente(amigoLogin);
 
-        if (meuLogin.equals(amigoLogin)) {
-            throw new AutoAmizadeException();
-        }
+        verificarInimigo(meuLogin, amigoLogin);
 
-        for (Amizade amizade : amizades) {
-            if ((amizade.getSolicitante().equals(meuLogin) && amizade.getSolicitado().equals(amigoLogin)) ||
-                (amizade.getSolicitante().equals(amigoLogin) && amizade.getSolicitado().equals(meuLogin))) {
-                
-                if (amizade.isAceito()) {
-                    throw new AmizadeJaAdicionadaException();
-                }
+        Relacionamento novoRelacionamento = RelacionamentoFactory.criarRelacionamento("amizade", meuLogin, amigoLogin);
+        novoRelacionamento.validar();
 
-                if (amizade.getSolicitante().equals(meuLogin)) {
-                    throw new AmizadePendenteException();
-                } else {
-                    amizade.setAceito(true);
-                    AmizadeRepository.save(amizades);
-                    return;
+        for (Relacionamento rel : relacionamentos) {
+            if (rel.getClass().equals(novoRelacionamento.getClass())) {
+                if ((rel.getSolicitante().equals(meuLogin) && rel.getSolicitado().equals(amigoLogin)) ||
+                        (rel.getSolicitante().equals(amigoLogin) && rel.getSolicitado().equals(meuLogin))) {
+
+                    if (rel.isAceito()) {
+                        throw new AmizadeJaAdicionadaException();
+                    }
+
+                    if (rel.getSolicitante().equals(meuLogin)) {
+                        throw new AmizadePendenteException();
+                    } else {
+                        rel.aplicar();
+                        AmizadeRepository.save(relacionamentos);
+                        return;
+                    }
                 }
             }
         }
 
-        amizades.add(new Amizade(meuLogin, amigoLogin, false));
-        AmizadeRepository.save(amizades);
+        relacionamentos.add(novoRelacionamento);
+        AmizadeRepository.save(relacionamentos);
     }
 
     public boolean ehAmigo(String login1, String login2) {
-        for (Amizade amizade : amizades) {
-            if (amizade.isAceito() && 
-                ((amizade.getSolicitante().equals(login1) && amizade.getSolicitado().equals(login2)) ||
-                 (amizade.getSolicitante().equals(login2) && amizade.getSolicitado().equals(login1)))) {
-                return true;
+        for (Relacionamento rel : relacionamentos) {
+            if (rel.tipo().equals("Amizade")) {
+                if (rel.isAceito() &&
+                        ((rel.getSolicitante().equals(login1) && rel.getSolicitado().equals(login2)) ||
+                                (rel.getSolicitante().equals(login2) && rel.getSolicitado().equals(login1)))) {
+                    return true;
+                }
             }
         }
         return false;
@@ -70,12 +99,14 @@ public class AmizadeService {
 
     public String getAmigos(String login) {
         List<String> meusAmigos = new ArrayList<>();
-        for (Amizade amizade : amizades) {
-            if (amizade.isAceito()) {
-                if (amizade.getSolicitante().equals(login)) {
-                    meusAmigos.add(amizade.getSolicitado());
-                } else if (amizade.getSolicitado().equals(login)) {
-                    meusAmigos.add(amizade.getSolicitante());
+        for (Relacionamento rel : relacionamentos) {
+            if (rel.tipo().equals("Amizade")) {
+                if (rel.isAceito()) {
+                    if (rel.getSolicitante().equals(login)) {
+                        meusAmigos.add(rel.getSolicitado());
+                    } else if (rel.getSolicitado().equals(login)) {
+                        meusAmigos.add(rel.getSolicitante());
+                    }
                 }
             }
         }
@@ -83,11 +114,102 @@ public class AmizadeService {
     }
 
     public void clear() {
-        this.amizades = new ArrayList<>();
+        this.relacionamentos = new ArrayList<>();
         AmizadeRepository.clear();
     }
 
-    public List<Amizade> getAmizades() {
-        return this.amizades;
+    public void removerUsuario(String login) {
+        relacionamentos.removeIf(rel -> rel.getSolicitante().equals(login) || rel.getSolicitado().equals(login));
+        try {
+            AmizadeRepository.save(relacionamentos);
+        } catch (FalhaAoSalvarException e) {
+        }
+    }
+
+    public void adicionarRelacionamento(String sessionId, String tipo, String alvo, SessionService sessionService)
+            throws SessaoInvalidaException, UsuarioNaoCadastradoException, RelacionamentoInvalidoException,
+            RelacionamentoJaExisteException, FalhaAoSalvarException, InimigoException {
+        Usuario usuarioLogado = sessionService.obterUsuarioDaSessao(sessionId);
+        Validador.validarSessao(usuarioLogado);
+
+        String meuLogin = usuarioLogado.getLogin();
+        Validador.validarUsuarioExistente(alvo);
+
+        if (!tipo.equalsIgnoreCase("inimizade")) {
+            verificarInimigo(meuLogin, alvo);
+        }
+
+        Relacionamento novoRelacionamento = RelacionamentoFactory.criarRelacionamento(tipo, meuLogin, alvo);
+        novoRelacionamento.validar();
+        novoRelacionamento.aplicar();
+
+        for (Relacionamento rel : relacionamentos) {
+            if (rel.getClass().equals(novoRelacionamento.getClass())) {
+                if ((rel.getSolicitante().equals(meuLogin) && rel.getSolicitado().equals(alvo))) {
+                    if (tipo.equalsIgnoreCase("idolatria"))
+                        throw new IdolatriaJaAdicionadaException();
+                    if (tipo.equalsIgnoreCase("paquera"))
+                        throw new PaqueraJaAdicionadaException();
+                    if (tipo.equalsIgnoreCase("inimizade"))
+                        throw new InimizadeJaAdicionadaException();
+                    throw new RelacionamentoJaExisteException();
+                }
+            }
+        }
+
+        relacionamentos.add(novoRelacionamento);
+        AmizadeRepository.save(relacionamentos);
+    }
+
+    public boolean ehFa(String login, String idolo) {
+        for (Relacionamento rel : relacionamentos) {
+            if (rel.tipo().equals("Idolatria")) {
+                if (rel.getSolicitante().equals(login) && rel.getSolicitado().equals(idolo)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public String getFas(String login) {
+        List<String> fas = new ArrayList<>();
+        for (Relacionamento rel : relacionamentos) {
+            if (rel.tipo().equals("Idolatria")) {
+                if (rel.getSolicitado().equals(login)) {
+                    fas.add(rel.getSolicitante());
+                }
+            }
+        }
+        return "{" + String.join(",", fas) + "}";
+    }
+
+    public boolean ehPaquera(String id, String paquera, SessionService sessionService) {
+        Usuario u = sessionService.obterUsuarioDaSessao(id);
+        for (Relacionamento rel : relacionamentos) {
+            if (rel.tipo().equals("Paquera")) {
+                if (rel.getSolicitante().equals(u.getLogin()) && rel.getSolicitado().equals(paquera)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public String getPaqueras(String id, SessionService sessionService) {
+        Usuario u = sessionService.obterUsuarioDaSessao(id);
+        List<String> paqueras = new ArrayList<>();
+        for (Relacionamento rel : relacionamentos) {
+            if (rel.tipo().equals("Paquera")) {
+                if (rel.getSolicitante().equals(u.getLogin())) {
+                    paqueras.add(rel.getSolicitado());
+                }
+            }
+        }
+        return "{" + String.join(",", paqueras) + "}";
+    }
+
+    public List<Relacionamento> getAmizades() {
+        return this.relacionamentos;
     }
 }

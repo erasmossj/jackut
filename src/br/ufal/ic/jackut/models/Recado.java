@@ -1,25 +1,15 @@
 package br.ufal.ic.jackut.models;
 
-public class Recado {
-    private String remetente;
+public class Recado extends Mensagem {
     private String destinatario;
-    private String texto;
 
     public Recado() {
+        super();
     }
 
     public Recado(String remetente, String destinatario, String texto) {
-        this.remetente = remetente;
+        super(remetente, texto);
         this.destinatario = destinatario;
-        this.texto = texto;
-    }
-
-    public String getRemetente() {
-        return remetente;
-    }
-
-    public void setRemetente(String remetente) {
-        this.remetente = remetente;
     }
 
     public String getDestinatario() {
@@ -28,13 +18,5 @@ public class Recado {
 
     public void setDestinatario(String destinatario) {
         this.destinatario = destinatario;
-    }
-
-    public String getTexto() {
-        return texto;
-    }
-
-    public void setTexto(String texto) {
-        this.texto = texto;
     }
 }
